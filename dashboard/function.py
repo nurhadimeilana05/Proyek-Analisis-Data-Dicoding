@@ -44,6 +44,21 @@ class DataAnalyzer:
         bycity_df = bycity_df.sort_values(by='customer_count', ascending=False)
 
         return bycity_df, most_city
+
+    def create_rfm_df(self):
+        rfm_df = df.groupby(by="customer_unique_id", as_index=False).agg({
+            "order_purchase_timestamp": "max", 
+            "order_id": "nunique",
+            "payment_value": "sum"
+        })
+        rfm_df.columns = ["customer_unique_id", "max_order_timestamp", "frequency", "monetary"]
+    
+        rfm_df["max_order_timestamp"] = rfm_df["max_order_timestamp"].dt.date
+        recent_date = df["order_purchase_timestamp"].dt.date.max()
+        rfm_df["recency"] = rfm_df["max_order_timestamp"].apply(lambda x: (recent_date - x).days)
+        rfm_df.drop("max_order_timestamp", axis=1, inplace=True)
+    
+    return rfm_df
     
 class BrazilMapPlotter:
     def __init__(self, data, plt, mpimg, urllib, st):
