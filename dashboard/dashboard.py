@@ -55,6 +55,7 @@ daily_order_df = function.create_daily_order_df()
 sum_spend_df = function.create_sum_spend_df()
 sum_order_items_df = function.create_sum_order_items_df()
 city, most_city = function.create_city_df()
+rfm_df = function.create_rfm_df()
 
 # Define your Streamlit app
 st.title("E-Commerce Public Dataset")
@@ -126,14 +127,16 @@ with col2:
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(45, 25))
 
-sns.barplot(x="order_item_count", y="product_category_name_english", data=sum_order_items_df.head(5), palette="mako", ax=ax[0])
+colors = ["#72BF78", "#D3D3D3", "#D3D3D3", "#D3D3D3", "#D3D3D3"]
+
+sns.barplot(x="order_item_count", y="product_category_name_english", data=sum_order_items_df.head(5), palette=colors, ax=ax[0])
 ax[0].set_ylabel(None)
 ax[0].set_xlabel("Number of Sales (Order Item)", fontsize=80)
 ax[0].set_title("Best Performing Product", loc="center", fontsize=90)
 ax[0].tick_params(axis ='y', labelsize=55)
 ax[0].tick_params(axis ='x', labelsize=50)
 
-sns.barplot(x="order_item_count", y="product_category_name_english", data=sum_order_items_df.sort_values(by="order_item_count", ascending=True).head(5), palette="mako", ax=ax[1])
+sns.barplot(x="order_item_count", y="product_category_name_english", data=sum_order_items_df.sort_values(by="order_item_count", ascending=True).head(5), palette=colors, ax=ax[1])
 ax[1].set_ylabel(None)
 ax[1].set_xlabel("Number of Sales (Order Item)", fontsize=80)
 ax[1].invert_xaxis()
@@ -154,10 +157,11 @@ with tab1:
     st.markdown(f"Most Common City: **{most_city}**")
 
     fig, ax = plt.subplots(figsize=(10, 5))
+    colors = ["#72BF78", "#D3D3D3", "#D3D3D3", "#D3D3D3", "#D3D3D3"]
     sns.barplot(x=city.customer_city.value_counts().index,
                 y=city.customer_count.values, 
                 data=state,
-                palette="mako"
+                palette=colors
                     )
 
     plt.title("Number customers from City", fontsize=15)
@@ -165,5 +169,38 @@ with tab1:
     plt.ylabel("Number of Customers")
     plt.xticks(fontsize=12)
     st.pyplot(fig)
+
+#RFM Analysis
+st.subheader("Best Customer Based on RFM Parameters")
+ 
+fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(35, 15))
+
+colors = ["#72BF78", "#72BF78", "#72BF78", "#72BF78", "#72BF78"]
+ 
+sns.barplot(y="recency", x="customer_unique_id", data=rfm_df.sort_values(by="recency", ascending=True).head(5), palette=colors, ax=ax[0])
+ax[0].set_ylabel(None)
+ax[0].set_xlabel("customer_unique_id", fontsize=30)
+ax[0].set_title("By Recency (days)", loc="center", fontsize=50)
+ax[0].tick_params(axis='y', labelsize=30)
+ax[0].tick_params(axis='x', labelsize=35)
+plt.setp(ax[0].get_xticklabels(), rotation=90)
+ 
+sns.barplot(y="frequency", x="customer_unique_id", data=rfm_df.sort_values(by="frequency", ascending=False).head(5), palette=colors, ax=ax[1])
+ax[1].set_ylabel(None)
+ax[1].set_xlabel("customer_unique_id", fontsize=30)
+ax[1].set_title("By Frequency", loc="center", fontsize=50)
+ax[1].tick_params(axis='y', labelsize=30)
+ax[1].tick_params(axis='x', labelsize=35)
+plt.setp(ax[1].get_xticklabels(), rotation=90)
+ 
+sns.barplot(y="monetary", x="customer_unique_id", data=rfm_df.sort_values(by="monetary", ascending=False).head(5), palette=colors, ax=ax[2])
+ax[2].set_ylabel(None)
+ax[2].set_xlabel("customer_unique_id", fontsize=30)
+ax[2].set_title("By Monetary", loc="center", fontsize=50)
+ax[2].tick_params(axis='y', labelsize=30)
+ax[2].tick_params(axis='x', labelsize=35)
+plt.setp(ax[2].get_xticklabels(), rotation=90)
+ 
+st.pyplot(fig)
   
 st.caption('Copyright (C) Nurhadi Meilana 2024')
