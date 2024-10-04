@@ -58,7 +58,7 @@ class DataAnalyzer:
         rfm_df["recency"] = rfm_df["max_order_timestamp"].apply(lambda x: (recent_date - x).days)
         rfm_df.drop("max_order_timestamp", axis=1, inplace=True)
     
-    return rfm_df
+        return rfm_df
     
 class BrazilMapPlotter:
     def __init__(self, data, plt, mpimg, urllib, st):
