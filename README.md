@@ -15,7 +15,7 @@ Proyek ini bertujuan untuk menganalisis data pada E-Commerce Public Dataset dan 
 1. Clone repository ini ke komputer lokal Anda menggunakan perintah berikut:
 
    ```shell
-   git clone https://github.com/Mazwan98/dicoding.git
+   git clone https://github.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding.git
    ```
 
 2. Pastikan Anda memiliki lingkungan Python yang sesuai dan pustaka-pustaka yang diperlukan. Anda dapat menginstal pustaka-pustaka tersebut dengan menjalankan perintah berikut:
@@ -30,6 +30,6 @@ Proyek ini bertujuan untuk menganalisis data pada E-Commerce Public Dataset dan 
 1. Masuk ke direktori proyek (Local):
 
    ```shell
-   cd dicoding/dashboard/
-   streamlit run main.py
+   cd Proyek-Analisis-Data-Dicoding/dashboard/
+   streamlit run dashboard.py
    ```
