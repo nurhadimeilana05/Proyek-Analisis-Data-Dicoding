@@ -4,7 +4,7 @@ import matplotlib.image as mpimg
 import seaborn as sns
 import streamlit as st
 import urllib
-from function import DataAnalyzer, BrazilMapPlotter
+from function import AnalyticsTool, BrazilMapPlotter
 
 sns.set(style='dark')
 
