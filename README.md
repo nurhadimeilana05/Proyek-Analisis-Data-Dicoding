@@ -36,6 +36,6 @@ Proyek ini bertujuan untuk menganalisis data pada E-Commerce Public Dataset dan 
 1. Masuk ke direktori proyek (Local):
 
    ```shell
-   cd Proyek-Analisis-Data-Dicoding/dashboard
+   cd Proyek-Analisis-Data-Dicoding/dashboard/
    streamlit run dashboard.py
    ```
