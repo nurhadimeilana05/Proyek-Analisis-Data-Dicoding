@@ -58,7 +58,7 @@ main_df = all_df[
     (all_df["order_purchase_timestamp"] <= pd.to_datetime(end_date))
 ]
 
-function = DataAnalyzer(main_df)
+function = AnalyticsTool(main_df)
 map_plot = BrazilMapPlotter(data, plt, mpimg, urllib, st)
 
 daily_order_df = function.create_daily_order_df()
