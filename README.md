@@ -39,3 +39,5 @@ Proyek ini bertujuan untuk menganalisis data pada E-Commerce Public Dataset dan 
    cd Proyek-Analisis-Data-Dicoding/dashboard/
    streamlit run dashboard.py
    ```
+2. Atau gunakan link berikut:
+   [Proyek Analisis Data Dicoding](
