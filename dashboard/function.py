@@ -1,3 +1,5 @@
+import pandas as pd
+
 class AnalyticsTool:
     def __init__(self, df):
         self.df = df
@@ -52,7 +54,7 @@ class AnalyticsTool:
             "payment_value": "sum"
         })
         rfm_df.columns = ["customer_unique_id", "max_order_timestamp", "frequency", "monetary"]
-        rfm_df["max_order_timestamp"] = pd.to_datetime(rfm_df["max_order_timestamp"], errors='coerce').dt.date
+        rfm_df["max_order_timestamp"] = pd.to_datetime(rfm_df["max_order_timestamp"]).dt.date
         recent_date = self.df["order_purchase_timestamp"].dt.date.max()
         rfm_df["recency"] = rfm_df["max_order_timestamp"].apply(lambda x: (recent_date - x).days)
         rfm_df.drop("max_order_timestamp", axis=1, inplace=True)
