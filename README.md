@@ -40,4 +40,4 @@ Proyek ini bertujuan untuk menganalisis data pada E-Commerce Public Dataset dan 
    streamlit run dashboard.py
    ```
 2. Atau gunakan link berikut:
-   [Proyek Analisis Data Dicoding](
+   [Proyek Analisis Data Dicoding](http://192.168.32.85:8501)
