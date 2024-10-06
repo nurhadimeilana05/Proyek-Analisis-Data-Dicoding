@@ -4,7 +4,7 @@ import matplotlib.image as mpimg
 import seaborn as sns
 import streamlit as st
 import urllib
-from function import AnalyticsTool, BrazilMapPlotter
+from function import AnalyticsTool, BrazilGeospatial
 
 sns.set(style='dark')
 
@@ -59,7 +59,7 @@ main_df = all_df[
 ]
 
 function = AnalyticsTool(main_df)
-map_plot = BrazilMapPlotter(data, plt, mpimg, urllib, st)
+map_plot = BrazilGeospatial(data, plt, mpimg, urllib, st)
 
 daily_order_df = function.create_daily_order_df()
 sum_spend_df = function.create_sum_spend_df()
@@ -198,7 +198,7 @@ with tab1:
     st.pyplot(fig)
 
 with tab2:
-    map_plot.plot_brazil_map()
+    map_plot.plot()
     
 # RFM Analysis
 st.subheader("Best Customer Based on RFM Parameters")
