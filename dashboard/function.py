@@ -60,7 +60,7 @@ class AnalyticsTool:
     
         return rfm_df
     
-class BrazilMapPlotter:
+class BrazilGeospatial:
     def __init__(self, data, plt, mpimg, urllib, st):
         self.data = data
         self.plt = plt
