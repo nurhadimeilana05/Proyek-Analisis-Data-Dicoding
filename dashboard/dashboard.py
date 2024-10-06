@@ -21,8 +21,12 @@ all_df = pd.read_csv("https://raw.githubusercontent.com/nurhadimeilana05/Proyek-
 all_df.sort_values(by="order_purchase_timestamp", inplace=True)
 all_df.reset_index(drop=True, inplace=True) 
 
+# Geolocation Dataset
 geolocation = pd.read_csv("https://raw.githubusercontent.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding/main/dashboard/geolocation.csv")
 data = geolocation.drop_duplicates(subset='customer_unique_id')
+
+for col in datetime_cols:
+    all_df[col] = pd.to_datetime(all_df[col])
 
 min_date = all_df["order_purchase_timestamp"].min()
 max_date = all_df["order_purchase_timestamp"].max()
