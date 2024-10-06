@@ -134,7 +134,7 @@ with col2:
     avg_items = sum_order_items_df["order_item_count"].mean()
     st.markdown(f"Average Items: **{avg_items:.2f}**")
 
-fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(45, 25))
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(50, 25))
 
 colors = ["#72BF78", "#D3D3D3", "#D3D3D3", "#D3D3D3", "#D3D3D3"]
 
