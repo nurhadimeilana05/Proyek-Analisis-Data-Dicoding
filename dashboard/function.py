@@ -46,7 +46,7 @@ class DataAnalyzer:
         return bycity_df, most_city
 
     def create_rfm_df(self):
-        rfm_df = df.groupby(by="customer_unique_id", as_index=False).agg({
+        rfm_df = all_df.groupby(by="customer_unique_id", as_index=False).agg({
             "order_purchase_timestamp": "max", 
             "order_id": "nunique",
             "payment_value": "sum"
