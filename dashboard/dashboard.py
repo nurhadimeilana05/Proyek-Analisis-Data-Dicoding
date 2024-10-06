@@ -7,23 +7,25 @@ import urllib
 from function import DataAnalyzer, BrazilMapPlotter
 
 sns.set(style='dark')
-st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Dataset
-datetime_cols = ["order_approved_at", "order_delivered_carrier_date", "order_delivered_customer_date", "order_estimated_delivery_date", "order_purchase_timestamp", "shipping_limit_date"]
+datetime_cols = [
+    "order_approved_at", 
+    "order_delivered_carrier_date", 
+    "order_delivered_customer_date", 
+    "order_estimated_delivery_date", 
+    "order_purchase_timestamp", 
+    "shipping_limit_date"
+]
 all_df = pd.read_csv("https://raw.githubusercontent.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding/main/dashboard/all_df.csv")
 all_df.sort_values(by="order_purchase_timestamp", inplace=True)
-all_df.reset_index(inplace=True)
+all_df.reset_index(drop=True, inplace=True) 
 
-# Geolocation Dataset
 geolocation = pd.read_csv("https://raw.githubusercontent.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding/main/dashboard/geolocation.csv")
 data = geolocation.drop_duplicates(subset='customer_unique_id')
 
-for col in datetime_cols:
-    all_df[col] = pd.to_datetime(all_df[col])
-
-min_date = all_df["order_purchase_timestamp"].min()
-max_date = all_df["order_purchase_timestamp"].max()
+min_date = all_df["order_purchase_timestamp"].min().date()
+max_date = all_df["order_purchase_timestamp"].max().date()
 
 # Sidebar
 with st.sidebar:
@@ -31,8 +33,10 @@ with st.sidebar:
     with col1:
         st.write(' ')
     with col2:
-        st.image("https://raw.githubusercontent.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding/main/dashboard/logo_e-commerce.png"
-                 , width=100)
+        st.image(
+            "https://raw.githubusercontent.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding/main/dashboard/logo_e-commerce.png",
+            width=100
+        )
     with col3:
         st.write(' ')
 
@@ -45,8 +49,10 @@ with st.sidebar:
     )
 
 # Main
-main_df = all_df[(all_df["order_purchase_timestamp"] >= str(start_date)) & 
-                 (all_df["order_purchase_timestamp"] <= str(end_date))]
+main_df = all_df[
+    (all_df["order_purchase_timestamp"] >= pd.to_datetime(start_date)) & 
+    (all_df["order_purchase_timestamp"] <= pd.to_datetime(end_date))
+]
 
 function = DataAnalyzer(main_df)
 map_plot = BrazilMapPlotter(data, plt, mpimg, urllib, st)
@@ -57,10 +63,7 @@ sum_order_items_df = function.create_sum_order_items_df()
 city, most_city = function.create_city_df()
 rfm_df = function.create_rfm_df()
 
-# Define your Streamlit app
 st.title("E-Commerce Public Dataset")
-
-# Add text or descriptions
 st.write("**Hello Everyone! Welcome to Dashboard E-Commerce Public Dataset.**")
 
 # Daily Orders Delivered
@@ -68,20 +71,22 @@ st.subheader("Daily Orders Delivered")
 col1, col2 = st.columns(2)
 
 with col1:
-    total_order = daily_orders_df["order_count"].sum()
+    total_order = daily_order_df["order_count"].sum()
     st.markdown(f"Total Order: **{total_order}**")
 
 with col2:
-    total_revenue = daily_orders_df["total_revenue"].sum()
+    total_revenue = daily_order_df["total_revenue"].sum()
     st.markdown(f"Total Revenue: **{total_revenue}**")
 
 fig, ax = plt.subplots(figsize=(10, 5))
 sns.lineplot(
-    x=daily_orders_df["order_purchase_timestamp"],
-    y=daily_orders_df["order_count"],
+    x="order_purchase_timestamp",
+    y="order_count",
+    data=daily_order_df,
     marker="o",
     linewidth=2,
-    color="#72BF78"
+    color="#72BF78",
+    ax=ax
 )
 ax.tick_params(axis="x", rotation=45)
 ax.tick_params(axis="y", labelsize=15)
@@ -97,7 +102,7 @@ with col1:
 
 with col2:
     avg_spend = sum_spend_df["total_spend"].mean()
-    st.markdown(f"Average Spend: **{avg_spend}**")
+    st.markdown(f"Average Spend: **{avg_spend:.2f}**")
 
 fig, ax = plt.subplots(figsize=(10, 5))
 sns.lineplot(
@@ -106,9 +111,9 @@ sns.lineplot(
     y="total_spend",
     marker="o",
     linewidth=2,
-    color="#72BF78"
+    color="#72BF78",
+    ax=ax
 )
-
 ax.tick_params(axis="x", rotation=45)
 ax.tick_params(axis="y", labelsize=15)
 st.pyplot(fig)
@@ -123,20 +128,34 @@ with col1:
 
 with col2:
     avg_items = sum_order_items_df["order_item_count"].mean()
-    st.markdown(f"Average Items: **{avg_items}**")
+    st.markdown(f"Average Items: **{avg_items:.2f}**")
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(45, 25))
 
 colors = ["#72BF78", "#D3D3D3", "#D3D3D3", "#D3D3D3", "#D3D3D3"]
 
-sns.barplot(x="order_item_count", y="product_category_name_english", data=sum_order_items_df.head(5), palette=colors, ax=ax[0])
+# Best Performing Product
+sns.barplot(
+    x="order_item_count", 
+    y="product_category_name_english", 
+    data=sum_order_items_df.head(5), 
+    palette=colors, 
+    ax=ax[0]
+)
 ax[0].set_ylabel(None)
 ax[0].set_xlabel("Number of Sales (Order Item)", fontsize=80)
 ax[0].set_title("Best Performing Product", loc="center", fontsize=90)
-ax[0].tick_params(axis ='y', labelsize=55)
-ax[0].tick_params(axis ='x', labelsize=50)
+ax[0].tick_params(axis='y', labelsize=55)
+ax[0].tick_params(axis='x', labelsize=50)
 
-sns.barplot(x="order_item_count", y="product_category_name_english", data=sum_order_items_df.sort_values(by="order_item_count", ascending=True).head(5), palette=colors, ax=ax[1])
+# Worst Performing Product
+sns.barplot(
+    x="order_item_count", 
+    y="product_category_name_english", 
+    data=sum_order_items_df.sort_values(by="order_item_count", ascending=True).head(5), 
+    palette=colors, 
+    ax=ax[1]
+)
 ax[1].set_ylabel(None)
 ax[1].set_xlabel("Number of Sales (Order Item)", fontsize=80)
 ax[1].invert_xaxis()
@@ -150,57 +169,82 @@ st.pyplot(fig)
 
 # Customer By City
 st.subheader("Customer By City")
-tab1 = st.tabs(["City"])
+tab1, tab2 = st.tabs(["City", "Map"])
 
 with tab1:
-    most_city = city.customer_city.value_counts().index[0]
+    most_city = city.customer_city.value_counts().idxmax()
     st.markdown(f"Most Common City: **{most_city}**")
-
+    
     fig, ax = plt.subplots(figsize=(10, 5))
-    colors = ["#72BF78", "#D3D3D3", "#D3D3D3", "#D3D3D3", "#D3D3D3"]
-    sns.barplot(x=city.customer_city.value_counts().index,
-                y=city.customer_count.values, 
-                data=state,
-                palette=colors
-                    )
+    colors = ["#72BF78"] + ["#D3D3D3"] * 4  
 
-    plt.title("Number customers from City", fontsize=15)
-    plt.xlabel("City")
-    plt.ylabel("Number of Customers")
-    plt.xticks(fontsize=12)
+    top_cities = city.customer_city.value_counts().head(5)
+    sns.barplot(
+        x=top_cities.index,
+        y=top_cities.values, 
+        palette=colors,
+        ax=ax
+    )
+
+    ax.set_title("Number of Customers by City", fontsize=20)
+    ax.set_xlabel("City")
+    ax.set_ylabel("Number of Customers")
+    ax.tick_params(axis='x', rotation=45, labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
     st.pyplot(fig)
 
-#RFM Analysis
+with tab2:
+    map_plot.plot_brazil_map()
+    
+# RFM Analysis
 st.subheader("Best Customer Based on RFM Parameters")
- 
+
 fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(35, 15))
 
-colors = ["#72BF78", "#72BF78", "#72BF78", "#72BF78", "#72BF78"]
- 
-sns.barplot(y="recency", x="customer_unique_id", data=rfm_df.sort_values(by="recency", ascending=True).head(5), palette=colors, ax=ax[0])
-ax[0].set_ylabel(None)
-ax[0].set_xlabel("customer_unique_id", fontsize=30)
-ax[0].set_title("By Recency (days)", loc="center", fontsize=50)
-ax[0].tick_params(axis='y', labelsize=30)
-ax[0].tick_params(axis='x', labelsize=35)
-plt.setp(ax[0].get_xticklabels(), rotation=90)
- 
-sns.barplot(y="frequency", x="customer_unique_id", data=rfm_df.sort_values(by="frequency", ascending=False).head(5), palette=colors, ax=ax[1])
-ax[1].set_ylabel(None)
-ax[1].set_xlabel("customer_unique_id", fontsize=30)
-ax[1].set_title("By Frequency", loc="center", fontsize=50)
-ax[1].tick_params(axis='y', labelsize=30)
-ax[1].tick_params(axis='x', labelsize=35)
-plt.setp(ax[1].get_xticklabels(), rotation=90)
- 
-sns.barplot(y="monetary", x="customer_unique_id", data=rfm_df.sort_values(by="monetary", ascending=False).head(5), palette=colors, ax=ax[2])
-ax[2].set_ylabel(None)
-ax[2].set_xlabel("customer_unique_id", fontsize=30)
-ax[2].set_title("By Monetary", loc="center", fontsize=50)
-ax[2].tick_params(axis='y', labelsize=30)
-ax[2].tick_params(axis='x', labelsize=35)
-plt.setp(ax[2].get_xticklabels(), rotation=90)
- 
+colors = ["#72BF78"] * 5
+
+# By Recency
+sns.barplot(
+    y="recency", 
+    x="customer_unique_id", 
+    data=rfm_df.sort_values(by="recency").head(5), 
+    palette=colors, 
+    ax=ax[0]
+)
+ax[0].set_ylabel("Recency (days)", fontsize=15)
+ax[0].set_xlabel("Customer ID", fontsize=30)
+ax[0].set_title("By Recency (days)", fontsize=50)
+ax[0].tick_params(axis='y', labelsize=15)
+ax[0].tick_params(axis='x', labelsize=15, rotation=90)
+
+# By Frequency
+sns.barplot(
+    y="frequency", 
+    x="customer_unique_id", 
+    data=rfm_df.sort_values(by="frequency", ascending=False).head(5), 
+    palette=colors, 
+    ax=ax[1]
+)
+ax[1].set_ylabel("Frequency", fontsize=15)
+ax[1].set_xlabel("Customer ID", fontsize=30)
+ax[1].set_title("By Frequency", fontsize=50)
+ax[1].tick_params(axis='y', labelsize=15)
+ax[1].tick_params(axis='x', labelsize=15, rotation=90)
+
+# By Monetary
+sns.barplot(
+    y="monetary", 
+    x="customer_unique_id", 
+    data=rfm_df.sort_values(by="monetary", ascending=False).head(5), 
+    palette=colors, 
+    ax=ax[2]
+)
+ax[2].set_ylabel("Monetary Value", fontsize=15)
+ax[2].set_xlabel("Customer ID", fontsize=30)
+ax[2].set_title("By Monetary", fontsize=50)
+ax[2].tick_params(axis='y', labelsize=15)
+ax[2].tick_params(axis='x', labelsize=15, rotation=90)
+
 st.pyplot(fig)
-  
+
 st.caption('Copyright (C) Nurhadi Meilana 2024')
