@@ -1,4 +1,4 @@
-class DataAnalyzer:
+class AnalyticsTool:
     def __init__(self, df):
         self.df = df
 
@@ -46,7 +46,7 @@ class DataAnalyzer:
         return bycity_df, most_city
 
     def create_rfm_df(self):
-        rfm_df = all_df.groupby(by="customer_unique_id", as_index=False).agg({
+        rfm_df = self.df.groupby(by="customer_unique_id", as_index=False).agg({
             "order_purchase_timestamp": "max", 
             "order_id": "nunique",
             "payment_value": "sum"
@@ -54,7 +54,7 @@ class DataAnalyzer:
         rfm_df.columns = ["customer_unique_id", "max_order_timestamp", "frequency", "monetary"]
     
         rfm_df["max_order_timestamp"] = rfm_df["max_order_timestamp"].dt.date
-        recent_date = df["order_purchase_timestamp"].dt.date.max()
+        recent_date = self.df["order_purchase_timestamp"].dt.date.max()
         rfm_df["recency"] = rfm_df["max_order_timestamp"].apply(lambda x: (recent_date - x).days)
         rfm_df.drop("max_order_timestamp", axis=1, inplace=True)
     
