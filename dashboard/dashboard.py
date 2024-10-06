@@ -24,8 +24,8 @@ all_df.reset_index(drop=True, inplace=True)
 geolocation = pd.read_csv("https://raw.githubusercontent.com/nurhadimeilana05/Proyek-Analisis-Data-Dicoding/main/dashboard/geolocation.csv")
 data = geolocation.drop_duplicates(subset='customer_unique_id')
 
-min_date = all_df["order_purchase_timestamp"].min().date()
-max_date = all_df["order_purchase_timestamp"].max().date()
+min_date = all_df["order_purchase_timestamp"].min()
+max_date = all_df["order_purchase_timestamp"].max()
 
 # Sidebar
 with st.sidebar:
