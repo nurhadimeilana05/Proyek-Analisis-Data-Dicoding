@@ -36,9 +36,9 @@ class AnalyticsTool:
         return sum_order_items_df
       
     def create_city_df(self):
-        bycity_df = self.df.groupby(by="customer_city").customer_unique_id.nunique().reset_index()
+        bycity_df = self.df.groupby(by="customer_city").customer_id.nunique().reset_index()
         bycity_df.rename(columns={
-            "customer_unique_id": "customer_count"
+            "customer_id": "customer_count"
         }, inplace=True)
         most_city = bycity_df.loc[bycity_df['customer_count'].idxmax(), 'customer_city']
         bycity_df = bycity_df.sort_values(by='customer_count', ascending=False)
@@ -53,7 +53,7 @@ class AnalyticsTool:
         })
         rfm_df.columns = ["customer_unique_id", "max_order_timestamp", "frequency", "monetary"]
     
-        rfm_df["max_order_timestamp"] = rfm_df["max_order_timestamp"].dt.date
+        rfm_df["max_order_timestamp"] = pd.to_datetime(rfm_df["max_order_timestamp"]).dt.date
         recent_date = self.df["order_purchase_timestamp"].dt.date.max()
         rfm_df["recency"] = rfm_df["max_order_timestamp"].apply(lambda x: (recent_date - x).days)
         rfm_df.drop("max_order_timestamp", axis=1, inplace=True)
