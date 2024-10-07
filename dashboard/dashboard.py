@@ -130,7 +130,7 @@ sns.lineplot(
     data=recent_months_performance,
     marker="o",
     linewidth=2,
-    label='Number of Orders'
+    label='Number of Orders',
     color="#72BF78",
     ax=ax
 )
@@ -152,7 +152,7 @@ sns.lineplot(
     data=recent_months_performance,
     marker="o",
     linewidth=2,
-    label='Revenue'
+    label='Revenue',
     color="#72BF78",
     ax=ax
 )
