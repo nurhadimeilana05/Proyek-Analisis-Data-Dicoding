@@ -2,6 +2,30 @@ class AnalyticsTool:
     def __init__(self, df):
         self.df = df
 
+    def create_sum_order_items_df(self):
+        sum_order_items_df = self.df.groupby("product_category_name_english")["order_item_id"].count().reset_index()
+        sum_order_items_df.rename(columns={
+            "order_item_id": "order_item_count"
+        }, inplace=True)
+        sum_order_items_df = sum_order_items_df.sort_values(by='order_item_count', ascending=False)
+
+        return sum_order_items_df
+
+    def create_monthly_performance_df(self):
+        monthly_performance = self.df.resample('M', on='order_purchase_timestamp').agg({
+            "order_id": "nunique",
+            "payment_value": "sum"
+        })
+        monthly_performance.index = monthly_performance.index.strftime('%B')
+        monthly_performance = monthly_performance.reset_index()
+        monthly_performance.rename(columns={
+            "order_id": "order_count",
+            "payment_value": "total_revenue"
+        }, inplace=True)
+        recent_months_performance = monthly_performance.tail(9)
+
+        return recent_months_performance
+    
     def create_daily_order_df(self):
         daily_order_df = self.df.resample(rule='D', on='order_purchase_timestamp').agg({
             "order_id": "nunique",
@@ -25,18 +49,9 @@ class AnalyticsTool:
         }, inplace=True)
 
         return sum_spend_df
-
-    def create_sum_order_items_df(self):
-        sum_order_items_df = self.df.groupby("product_category_name_english")["order_item_id"].count().reset_index()
-        sum_order_items_df.rename(columns={
-            "order_item_id": "order_item_count"
-        }, inplace=True)
-        sum_order_items_df = sum_order_items_df.sort_values(by='order_item_count', ascending=False)
-
-        return sum_order_items_df
       
     def create_city_df(self):
-        bycity_df = self.df.groupby(by="customer_city")["customer_id"].nunique().reset_index()
+        bycity_df = self.df.groupby("customer_city")['customer_id'].nunique().reset_index()
         bycity_df.rename(columns={
             "customer_id": "customer_count"
         }, inplace=True)
