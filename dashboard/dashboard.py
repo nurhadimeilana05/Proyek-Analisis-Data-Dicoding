@@ -135,6 +135,7 @@ sns.lineplot(
     ax=ax
 )
 
+ax.set_ylim(bottom=0)
 ax.set_title("Number of Orders in Recent Months (2018)", loc="center", fontsize=20)
 ax.set_ylabel("Number of Orders", fontsize=12)
 ax.set_xlabel("Month", fontsize=12)
@@ -157,6 +158,7 @@ sns.lineplot(
     ax=ax
 )
 
+ax.set_ylim(bottom=0)
 ax.set_title("Revenue in Recent Months (2018)", loc="center", fontsize=20)
 ax.set_ylabel("Revenue", fontsize=12)
 ax.set_xlabel("Month", fontsize=12)
@@ -256,15 +258,15 @@ colors = ["#72BF78"] * 5
 sns.barplot(
     y="recency", 
     x="customer_unique_id", 
-    data=rfm_df.sort_values(by="recency").head(5), 
+    data=rfm_df.sort_values(by="recency", ascending=True).head(5), 
     palette=colors, 
     ax=ax[0]
 )
-ax[0].set_ylabel("Recency (days)", fontsize=15)
+ax[0].set_ylabel("Recency (days)", fontsize=30)
 ax[0].set_xlabel("Customer Unique ID", fontsize=30)
 ax[0].set_title("By Recency (days)", fontsize=50)
-ax[0].tick_params(axis='y', labelsize=15)
-ax[0].tick_params(axis='x', labelsize=15, rotation=90)
+ax[0].tick_params(axis='y', labelsize=30)
+ax[0].tick_params(axis='x', labelsize=35, rotation=90)
 
 # By Frequency
 sns.barplot(
@@ -274,11 +276,11 @@ sns.barplot(
     palette=colors, 
     ax=ax[1]
 )
-ax[1].set_ylabel("Frequency", fontsize=15)
+ax[1].set_ylabel("Frequency", fontsize=30)
 ax[1].set_xlabel("Customer Unique ID", fontsize=30)
 ax[1].set_title("By Frequency", fontsize=50)
-ax[1].tick_params(axis='y', labelsize=15)
-ax[1].tick_params(axis='x', labelsize=15, rotation=90)
+ax[1].tick_params(axis='y', labelsize=30)
+ax[1].tick_params(axis='x', labelsize=35, rotation=90)
 
 # By Monetary
 sns.barplot(
@@ -288,11 +290,11 @@ sns.barplot(
     palette=colors, 
     ax=ax[2]
 )
-ax[2].set_ylabel("Monetary Value", fontsize=15)
+ax[2].set_ylabel("Monetary Value", fontsize=30)
 ax[2].set_xlabel("Customer Unique ID", fontsize=30)
 ax[2].set_title("By Monetary", fontsize=50)
-ax[2].tick_params(axis='y', labelsize=15)
-ax[2].tick_params(axis='x', labelsize=15, rotation=90)
+ax[2].tick_params(axis='y', labelsize=30)
+ax[2].tick_params(axis='x', labelsize=35, rotation=90)
 
 st.pyplot(fig)
 
