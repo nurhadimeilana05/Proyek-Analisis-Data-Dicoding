@@ -22,7 +22,7 @@ class AnalyticsTool:
             "order_id": "order_count",
             "payment_value": "total_revenue"
         }, inplace=True)
-        recent_months_performance = monthly_performance.tail(10)
+        recent_months_performance = monthly_performance.tail(8)
 
         return recent_months_performance
     
